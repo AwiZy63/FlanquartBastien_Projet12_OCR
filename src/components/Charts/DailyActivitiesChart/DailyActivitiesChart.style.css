@@ -1,0 +1,54 @@
+.dailyactivities-container {
+    /* width: 66%; */
+    width: 100%;
+    height: 30vh;
+    background: #fbfbfb;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
+    border-radius: 5px;
+}
+
+.dailyactivities-header {
+    margin: 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.dailyactivities-header-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.dailyactivities-header-legend {
+    display: flex;
+    gap: 52px;
+}
+
+.dailyactivities-header-legend-weight,
+.dailyactivities-header-legend-energy {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(116, 121, 140, 1);
+    position: relative;
+    margin: 0;
+}
+
+.dailyactivities-header-legend-weight::before, .dailyactivities-header-legend-energy::before {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(40, 45, 48, 1);
+    border-radius: 50%;
+    content: '';
+    position: absolute;
+    left: 0;
+    transform: translate(-18px, 0);
+  }
+  .dailyactivities-header-legend-energy::before {
+    background-color: rgba(230, 0, 0, 1);
+  }
+  
+  .dailyactivities-charts {
+    height: 200px;
+    width: 100%;
+    margin-top: 32px;
+  }

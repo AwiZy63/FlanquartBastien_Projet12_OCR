@@ -1,8 +1,0 @@
-import React from 'react';
-import './Card.style.css';
-
-export default function Card() {
-    return (
-        <div>Card</div>
-    )
-}

@@ -70,13 +70,14 @@ export default function App(props) {
 
   /* While all data are not fetched, the page will show a loading screen. */
   if (Object.keys(userData).length > 0 && Object.keys(userActivities).length > 0 && userSessionsDuration.length > 0) {
+    // console.log(userData)
+    // console.log(userActivities);
     // console.log(userSessionsDuration)
     return (
       <div className='page-wrapper'>
         <Navbar />
         <Sidebar />
         <div className="main-wrapper">
-          {/* <Loading /> */}
           <Dashboard cardInfos={userData["keyData"]} todayScore={userData["todayScore"] || userData["score"]} userInfos={userData["userInfos"]} userActivities={userActivities} userSessionsDuration={userSessionsDuration} />
         </div>
       </div>

@@ -1,8 +1,8 @@
 import React from 'react';
-import './ActivitiesTypeChart.css';
+import './AverageScoreChart.style.css';
 
-export default function ActivitiesTypeChart() {
+export default function AverageScoreChart() {
   return (
-    <div>ActivitiesTypeChart</div>
+    <div className='small-chart-container average-score-chart-container'>AverageScoreChart</div>
   )
 }

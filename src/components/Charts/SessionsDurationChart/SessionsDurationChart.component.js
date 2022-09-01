@@ -1,8 +1,8 @@
 import React from 'react';
-import './SessionsDurationChart.css';
+import './SessionsDurationChart.style.css';
 
 export default function SessionsDurationChart() {
   return (
-    <div>SessionsDurationChart</div>
+    <div className='small-chart-container session-duration-chart-container'>SessionsDurationChart</div>
   )
 }

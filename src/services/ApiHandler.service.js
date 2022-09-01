@@ -1,5 +1,5 @@
 import axios from "axios";
-import { USER_ACTIVITY, USER_MAIN_DATA } from "../data/MockedData";
+import { USER_ACTIVITY, USER_AVERAGE_SESSIONS, USER_MAIN_DATA } from "../data/MockedData";
 
 /* It's a class that makes a request to an API and returns the data */
 export default class Services {
@@ -10,7 +10,7 @@ export default class Services {
    * @param id - the id of the profile you want to get
    */
   constructor(id) {
-    this.profileId = id || null;
+    this.profileId = parseInt(id) || null;
     this.apiURL = 'http://localhost:3000';
   }
 
@@ -19,15 +19,85 @@ export default class Services {
     return await axios(`${this.apiURL}/user/${this.profileId}`, {
       method: 'GET'
     }).then((response) => {
-      return response.data.data;
-    }).catch((error) => {
+      const data = response.data.data;
+
+      const cardInfos = data["keyData"];
+      const cardInfosMap = new Map(Object.entries(cardInfos));
+      const cardInfosKeys = Object.keys(cardInfos);
+      const formattedCardInfos = [];
+
+      cardInfosMap.forEach((value) => {
+        cardInfosKeys.forEach((key) => {
+          if (cardInfos[key] === value) {
+            let unit = '';
+            let label = '';
+            if (key === "calorieCount") {
+              unit = 'kCal';
+              label = 'Calories';
+            } else if (key === "proteinCount") {
+              unit = 'g';
+              label = 'Proteines';
+            } else if (key === "carbohydrateCount") {
+              unit = 'g';
+              label = 'Glucides';
+            } else if (key === "lipidCount") {
+              unit = 'g';
+              label = 'Lipides';
+            }
+            formattedCardInfos.push({ key, value, label, unit })
+          }
+        })
+      });
+
+      const formattedData = {
+        userInfos: data.userInfos,
+        keyData: formattedCardInfos,
+        todayScore: data.todayScore || data.score
+      };
+      return formattedData;
+    }).catch(async (error) => {
       /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
-      if (error) {
-        const data = USER_MAIN_DATA.find((user) => user.id === this.profileId);
-        if (!data) {
+      if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
+        const data = await USER_MAIN_DATA.find((user) => user.id === this.profileId);
+
+        if (!data || Object.keys(data).length <= 0) {
           return {};
         }
-        return data;
+
+        const cardInfos = data["keyData"];
+        const cardInfosMap = new Map(Object.entries(cardInfos));
+        const cardInfosKeys = Object.keys(cardInfos);
+        const formattedCardInfos = [];
+
+        cardInfosMap.forEach((value) => {
+          cardInfosKeys.forEach((key) => {
+            if (cardInfos[key] === value) {
+              let unit = '';
+              let label = '';
+              if (key === "calorieCount") {
+                unit = 'kCal';
+                label = 'Calories';
+              } else if (key === "proteinCount") {
+                unit = 'g';
+                label = 'Proteines';
+              } else if (key === "carbohydrateCount") {
+                unit = 'g';
+                label = 'Glucides';
+              } else if (key === "lipidCount") {
+                unit = 'g';
+                label = 'Lipides';
+              }
+              formattedCardInfos.push({ key, value, label, unit })
+            }
+          })
+        });
+
+        const formattedData = {
+          userInfos: data.userInfos,
+          keyData: formattedCardInfos,
+          todayScore: data.todayScore || data.score
+        };
+        return formattedData;
       }
     });
   }
@@ -38,23 +108,24 @@ export default class Services {
     return await axios(`${this.apiURL}/user/${this.profileId}/activity`, {
       method: 'GET'
     })
-    .then((response) => {
-      /**
-       * It's sorting the data by date. 
-       * @returns The sorted data.
-       */
-      const sortedData = response.data.data.sessions.sort((a, b) => new Date(b.day) - new Date(a.day)).reverse();
-      return sortedData;
-    }).catch((error) => {
-      /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
-      if (error) {
-        const data = USER_ACTIVITY.find((user) => user.id === this.profileId);
-        if (!data) {
-          return {};
+      .then((response) => {
+        /**
+         * It's sorting the data by date. 
+         * @returns The sorted data.
+         */
+        const sortedData = response.data.data.sessions.sort((a, b) => new Date(b.day) - new Date(a.day)).reverse();
+        return sortedData;
+      }).catch(async (error) => {
+        /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
+        if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
+          const data = await USER_ACTIVITY.find((user) => user.userId === this.profileId);
+
+          if (!data || Object.keys(data).length <= 0) {
+            return {};
+          }
+          return data.sessions.sort((a, b) => new Date(b.day) - new Date(a.day)).reverse();
         }
-        return data;
-      }
-    })
+      })
   }
 
   /* It's a function that makes a request to an API to get the userSessionsDuration from userId and
@@ -63,18 +134,19 @@ export default class Services {
     return await axios(`${this.apiURL}/user/${this.profileId}/average-sessions`, {
       method: 'GET'
     })
-    .then((response) => {
-      return response.data.data.sessions;
-    }).catch((error) => {
-      /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
-      if (error) {
-        const data = USER_ACTIVITY.find((user) => user.id === this.profileId);
-        if (!data) {
-          return {};
+      .then((response) => {
+        return response.data.data.sessions;
+      }).catch(async (error) => {
+        /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
+        if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
+          const data = await USER_AVERAGE_SESSIONS.find((user) => user.userId === this.profileId);
+
+          if (!data || Object.keys(data).length <= 0) {
+            return {};
+          }
+          return data.sessions;
         }
-        return data.sessions;
-      }
-    })
+      })
   }
 
 }
