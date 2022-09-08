@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 
 export default function DailyActivitiesChart(props) {
   const { userActivities } = props;
-  console.log(userActivities)
+  
   return (
     <div className='dailyactivities-container'>
       <div className="dailyactivities-header">

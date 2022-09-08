@@ -33,22 +33,23 @@
     margin: 0;
 }
 
-.dailyactivities-header-legend-weight::before, .dailyactivities-header-legend-energy::before {
+.dailyactivities-header-legend-weight::before,
+.dailyactivities-header-legend-energy::before {
     width: 8px;
     height: 8px;
     background-color: rgba(40, 45, 48, 1);
     border-radius: 50%;
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     transform: translate(-18px, 0);
-  }
-  .dailyactivities-header-legend-energy::before {
+}
+.dailyactivities-header-legend-energy::before {
     background-color: rgba(230, 0, 0, 1);
-  }
-  
-  .dailyactivities-charts {
+}
+
+.dailyactivities-charts {
     height: 200px;
     width: 100%;
     margin-top: 32px;
-  }
+}

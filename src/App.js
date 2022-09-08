@@ -17,6 +17,7 @@ export default function App(props) {
   const [userData, setUserData] = useState({});
   const [userActivities, setUserActivities] = useState({});
   const [userSessionsDuration, setUserSessionsDuration] = useState({});
+  const [userPerformances, setUserPerformances] = useState({});
 
   useEffect(() => {
     /**
@@ -57,6 +58,19 @@ export default function App(props) {
       };
       return setUserSessionsDuration(response);
     }
+    
+    /**
+     * It fetches the user's performances from the the API and if the response is not an object or if the object is
+     * empty, it redirects the user to the id selection page
+     * @returns The user performances is being returned.
+     */
+    const fetchUserPerformances = async () => {
+      const response = await apiHandler.getUserPerformances();
+      if (typeof (response) !== 'object' || Object.keys(response).length <= 0) {
+        return navigate("/");
+      };
+      return setUserPerformances(response);
+    }
 
     /* It fetches the user's data from the API and if the response is not an object or if the object is
     empty, it redirects the user to the id selection page */
@@ -65,11 +79,13 @@ export default function App(props) {
     fetchUserActivities()
 
     fetchUserSessionsDuration()
+
+    fetchUserPerformances()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* While all data are not fetched, the page will show a loading screen. */
-  if (Object.keys(userData).length > 0 && Object.keys(userActivities).length > 0 && userSessionsDuration.length > 0) {
+  if (Object.keys(userData).length > 0 && Object.keys(userActivities).length > 0 && Object.keys(userPerformances).length > 0 && userSessionsDuration.length > 0) {
     // console.log(userData)
     // console.log(userActivities);
     // console.log(userSessionsDuration)
@@ -78,7 +94,7 @@ export default function App(props) {
         <Navbar />
         <Sidebar />
         <div className="main-wrapper">
-          <Dashboard cardInfos={userData["keyData"]} todayScore={userData["todayScore"] || userData["score"]} userInfos={userData["userInfos"]} userActivities={userActivities} userSessionsDuration={userSessionsDuration} />
+          <Dashboard cardInfos={userData["keyData"]} todayScore={userData["todayScore"] || userData["score"]} userInfos={userData["userInfos"]} userActivities={userActivities} userSessionsDuration={userSessionsDuration} userPerformances={userPerformances} />
         </div>
       </div>
     )

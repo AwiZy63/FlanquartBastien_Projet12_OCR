@@ -21,12 +21,10 @@ export default function InfoCards(props) {
     /* Formatting the number to the US format for adding digit. */
     const formattedNumber = new Intl.NumberFormat('en-US')
 
-
     let k = 0;
     /* Returning map of cards informations into a components. */
     return cardInfos.map((v) => {
-        k = k + 1;
-        console.log(k)
+        k++;
         const { value, label, unit } = v;
         return (
             <div key={k} className='card-container'>

@@ -8,10 +8,9 @@ import InfoCards from '../InfoCards/InfoCards.component';
 import './Dashboard.style.css';
 
 export default function Dashboard(props) {
-  const { userInfos, cardInfos, todayScore, userActivities, userSessionsDuration } = props;
+  const { userInfos, cardInfos, todayScore, userActivities, userSessionsDuration, userPerformances } = props;
   const { firstName } = userInfos;
 
-  // console.log(cardInfos, todayScore, userActivities, userSessionsDuration);
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -22,9 +21,9 @@ export default function Dashboard(props) {
         <div className="dashboard-charts">
           <DailyActivitiesChart userActivities={userActivities} />
           <div className="dashboard-small-charts">
-            <SessionsDurationChart />
-            <ActivitiesTypeChart />
-            <AverageScoreChart />
+            <SessionsDurationChart sessions={userSessionsDuration} />
+            <ActivitiesTypeChart userPerformances={userPerformances} />
+            <AverageScoreChart todayScore={todayScore} />
           </div>
         </div>
         <div className="dashboard-cards">
@@ -46,5 +45,9 @@ Dashboard.propTypes = {
     unit: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired
   }).isRequired).isRequired,
-  todayScore: PropTypes.number.isRequired
+  todayScore: PropTypes.number.isRequired,
+  userPerformances: PropTypes.arrayOf(PropTypes.shape({
+    activity: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired
+  }).isRequired).isRequired
 }
