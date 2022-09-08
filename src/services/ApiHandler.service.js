@@ -12,39 +12,54 @@ export default class Services {
   constructor(id) {
     this.profileId = parseInt(id) || null;
     this.apiURL = 'http://localhost:3000';
+    // Use Mocked API : true / false / 'auto'
+    this.useMockedApi = 'auto';
   }
 
   /* It's a function that makes a request to an API to get the userInfos from userId and returns the data. */
   getUserInfos = async () => {
-    /**
-     * TODO:
-     * Attribuer le résultat axios à une variable pour le factoriser une seule fois à la fin.
-     */
-    const response = await axios(`${this.apiURL}/user/${this.profileId}`, {
-      method: 'GET'
-    }).then((response) => {
-      const data = response.data.data;
+    let response = {};
+
+    if (this.useMockedApi && this.useMockedApi.toString() === 'true') {
+      const data = await USER_MAIN_DATA.find((user) => user.id === this.profileId);
 
       /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
-      if (!data) {
-        return {};
+      if (!data || Object.keys(data).length <= 0) {
+        response = {};
       }
 
-      return data;
-    }).catch(async (error) => {
-      /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
-      if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
-        /* It's returning the data from the mocked data. */
-        const data = await USER_MAIN_DATA.find((user) => user.id === this.profileId);
+      response = data;
+    } else if (!this.useMockedApi || this.useMockedApi === 'auto') {
+      response = await axios(`${this.apiURL}/user/${this.profileId}`, {
+        method: 'GET'
+      }).then((response) => {
+        const data = response.data.data;
 
         /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
-        if (!data || Object.keys(data).length <= 0) {
+        if (!data) {
           return {};
         }
 
         return data;
-      }
-    });
+      }).catch(async (error) => {
+        /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
+        if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
+          /* It's returning the data from the mocked data. */
+          if (this.useMockedApi === 'auto') {
+            const data = await USER_MAIN_DATA.find((user) => user.id === this.profileId);
+
+            /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
+            if (!data || Object.keys(data).length <= 0) {
+              return {};
+            }
+
+            return data;
+          } else {
+            return {};
+          }
+        }
+      });
+    }
 
     /* It's checking if the response is empty or not. If it's empty, it's returning an empty object. */
     if (!response || Object.keys(response).length <= 0) {
@@ -95,31 +110,49 @@ export default class Services {
    * the data.
    * @returns sorted data at date format */
   getUserActivities = async () => {
-    const response = await axios(`${this.apiURL}/user/${this.profileId}/activity`, {
-      method: 'GET'
-    })
-      .then((response) => {
-        const data = response.data.data;
+    let response = {};
 
-        /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
-        if (!data) {
-          return {};
-        }
+    if (this.useMockedApi && this.useMockedApi.toString() === 'true') {
+      const data = await USER_ACTIVITY.find((user) => user.userId === this.profileId);
 
-        return data.sessions;
-      }).catch(async (error) => {
-        /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
-        if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
-          /* It's returning the data from the mocked data. */
-          const data = await USER_ACTIVITY.find((user) => user.userId === this.profileId);
+      /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
+      if (!data || Object.keys(data).length <= 0) {
+        response = {};
+      }
+
+      response = data.sessions;
+    } else if (!this.useMockedApi || this.useMockedApi === 'auto') {
+      response = await axios(`${this.apiURL}/user/${this.profileId}/activity`, {
+        method: 'GET'
+      })
+        .then((response) => {
+          const data = response.data.data;
 
           /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
-          if (!data || Object.keys(data).length <= 0) {
+          if (!data) {
             return {};
           }
+
           return data.sessions;
-        }
-      })
+        }).catch(async (error) => {
+          /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
+          if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
+            /* It's returning the data from the mocked data. */
+            if (this.useMockedApi === 'auto') {
+              const data = await USER_ACTIVITY.find((user) => user.userId === this.profileId);
+
+              /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
+              if (!data || Object.keys(data).length <= 0) {
+                return {};
+              }
+              return data.sessions;
+            } else {
+              return {};
+            }
+          }
+        })
+    }
+
 
     /* It's checking if the response is empty or not. If it's empty, it's returning an empty object. */
     if (!response || Object.keys(response).length <= 0) {
@@ -133,32 +166,49 @@ export default class Services {
   /* It's a function that makes a request to an API to get the userSessionsDuration from userId and
   returns the data. */
   getUserSessionsDuration = async () => {
-    const response = await axios(`${this.apiURL}/user/${this.profileId}/average-sessions`, {
-      method: 'GET'
-    })
-      .then((response) => {
-        const data = response.data.data;
+    let response = {};
 
-        /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
-        if (!data) {
-          return {};
-        }
+    if (this.useMockedApi && this.useMockedApi.toString() === 'true') {
+      const data = await USER_AVERAGE_SESSIONS.find((user) => user.userId === this.profileId);
 
-        return data.sessions;
-      }).catch(async (error) => {
-        /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
-        if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
-          /* It's returning the data from the mocked data. */
-          const data = await USER_AVERAGE_SESSIONS.find((user) => user.userId === this.profileId);
+      /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
+      if (!data || Object.keys(data).length <= 0) {
+        response = {};
+      }
+
+      response = data.sessions;
+    } else if (!this.useMockedApi || this.useMockedApi === 'auto') {
+      response = await axios(`${this.apiURL}/user/${this.profileId}/average-sessions`, {
+        method: 'GET'
+      })
+        .then((response) => {
+          const data = response.data.data;
 
           /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
-          if (!data || Object.keys(data).length <= 0) {
+          if (!data) {
             return {};
           }
 
           return data.sessions;
-        }
-      })
+        }).catch(async (error) => {
+          /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
+          if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
+            /* It's returning the data from the mocked data. */
+            if (this.useMockedApi === 'auto') {
+              const data = await USER_AVERAGE_SESSIONS.find((user) => user.userId === this.profileId);
+
+              /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
+              if (!data || Object.keys(data).length <= 0) {
+                return {};
+              }
+
+              return data.sessions;
+            } else {
+              return {};
+            }
+          }
+        })
+    }
 
     const formattedData = [];
     if (Object.keys(response).length > 0) {
@@ -182,32 +232,49 @@ export default class Services {
   /* It's a function that makes a request to an API to get the userPerformances from userId and returns
   the data. */
   getUserPerformances = async () => {
-    const response = await axios(`${this.apiURL}/user/${this.profileId}/performance`, {
-      method: 'GET'
-    })
-      .then((response) => {
-        const data = response.data.data;
+    let response = {};
 
-        /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
-        if (!data) {
-          return {};
-        }
+    if (this.useMockedApi && this.useMockedApi.toString() === 'true') {
+      const data = await USER_PERFORMANCE.find((user) => user.userId === this.profileId);
 
-        return { kind: data.kind, data: data.data };
-      }).catch(async (error) => {
-        /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
-        if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
-          /* It's returning the data from the mocked data. */
-          const data = await USER_PERFORMANCE.find((user) => user.userId === this.profileId);
+      /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
+      if (!data || Object.keys(data).length <= 0) {
+        response = {};
+      }
+
+      response = { kind: data.kind, data: data.data };
+    } else if (!this.useMockedApi || this.useMockedApi === 'auto') {
+      response = await axios(`${this.apiURL}/user/${this.profileId}/performance`, {
+        method: 'GET'
+      })
+        .then((response) => {
+          const data = response.data.data;
 
           /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
-          if (!data || Object.keys(data).length <= 0) {
+          if (!data) {
             return {};
           }
 
           return { kind: data.kind, data: data.data };
-        }
-      });
+        }).catch(async (error) => {
+          /* It's a fallback in case the API is down. It's returning the data from the mocked data. */
+          if (error && (error.code === 'ERR_BAD_REQUEST' || error.code === 'ERR_NETWORK')) {
+            /* It's returning the data from the mocked data. */
+            if (this.useMockedApi === 'auto') {
+              const data = await USER_PERFORMANCE.find((user) => user.userId === this.profileId);
+
+              /* It's checking if the data is empty or not. If it's empty, it's returning an empty object. */
+              if (!data || Object.keys(data).length <= 0) {
+                return {};
+              }
+
+              return { kind: data.kind, data: data.data };
+            } else {
+              return {};
+            }
+          }
+        });
+    }
 
     /* It's a constant that contains the activities name. */
     const activitiesName = {

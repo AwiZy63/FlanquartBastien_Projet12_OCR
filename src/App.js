@@ -86,9 +86,6 @@ export default function App(props) {
 
   /* While all data are not fetched, the page will show a loading screen. */
   if (Object.keys(userData).length > 0 && Object.keys(userActivities).length > 0 && Object.keys(userPerformances).length > 0 && userSessionsDuration.length > 0) {
-    // console.log(userData)
-    // console.log(userActivities);
-    // console.log(userSessionsDuration)
     return (
       <div className='page-wrapper'>
         <Navbar />
