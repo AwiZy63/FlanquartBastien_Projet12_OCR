@@ -2,12 +2,13 @@
 
 ## Dependencies
 
+- git
 - NodeJS
 - Node Package Manager
 
 ## Installation
 
-- Clone the repository with `git clone ...`
+- Clone the repository with `git clone https://github.com/AwiZy63/FlanquartBastien_Projet12_OCR`
 
 - Goto the React App directory, open new PowerShell in there and type : `npm install`
 
