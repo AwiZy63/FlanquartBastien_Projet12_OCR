@@ -35,6 +35,7 @@ export default function AverageScoreChart(props) {
   )
 }
 
+/* A prop type validation. It is saying that the prop `todayScore` must be a number. */
 AverageScoreChart.propTypes = {
   todayScore: PropTypes.number.isRequired
 }

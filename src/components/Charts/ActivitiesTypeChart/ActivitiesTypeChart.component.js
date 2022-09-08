@@ -1,16 +1,11 @@
 import React from 'react';
 import './ActivitiesTypeChart.style.css';
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts';
-import { useState } from 'react';
 import { PropTypes } from 'prop-types';
 
 export default function ActivitiesTypeChart(props) {
   const { userPerformances } = props;
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  if (window.innerWidth !== windowWidth) {
-    setWindowWidth(window.innerWidth);
-  }
+  
   return (
     <div className='small-chart-container activities-type-chart-container'>
       <ResponsiveContainer width='100%' height='100%'>
